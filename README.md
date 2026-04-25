@@ -15,14 +15,6 @@ cd Dasam
 dotnet run
 ```
 
-Or build a release binary:
-
-```bash
-dotnet publish -c Release -r win-x64 --self-contained   # Windows
-dotnet publish -c Release -r osx-arm64 --self-contained  # macOS Apple Silicon
-dotnet publish -c Release -r linux-x64 --self-contained  # Linux
-```
-
 ---
 
 ## Usage Guide
