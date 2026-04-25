@@ -5,7 +5,7 @@ The name *Daśam* (दशाम्) is Sanskrit for "the state" — the accusati
 
 ## Requirements
 
-- [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
+- [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0)
 - Works on Windows, macOS, and Linux
 
 ## Build & Run
