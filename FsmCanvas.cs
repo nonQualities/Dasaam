@@ -40,25 +40,33 @@ public class FsmCanvas : Control
     private static readonly Typeface TfState = new(FontFamily.Parse("Inter,sans-serif"), FontStyle.Normal, FontWeight.SemiBold);
     private static readonly Typeface TfLabel = new(FontFamily.Parse("Inter,sans-serif"));
 
-    // ── Data ─────────────────────────────────────────────────────────────────
+    
+    
+    // ── Data 
     public List<FsmState> States { get; } = [];
     public new List<FsmTransition> Transitions { get; } = [];
+    
+    
+    
+    
 
-    // ── Editor state ─────────────────────────────────────────────────────────
+    // ── Editor state 
     private EditorMode _mode = EditorMode.Select;
     private FsmState? _dragState;
     private Point _dragOffset;
     private FsmState? _connectFrom;
     private Point _mousePos;
 
-    // ── Simulation state ─────────────────────────────────────────────────────
+    
+    
+    // ── Simulation state 
     public SimStatus SimulationStatus { get; private set; } = SimStatus.Idle;
     public string SimInput { get; private set; } = "";
     public int SimStep { get; private set; } = -1;
     private FsmState? _simCurrent;
     private List<(FsmState state, FsmTransition? trans, int charIdx)> _simHistory = new();
 
-    // ── Events ────────────────────────────────────────────────────────────────
+    // ── Events 
     public event Action<Point>? RequestAddState;
     public event Action<FsmState, FsmState>? RequestAddTransition;
     public event Action? SimulationChanged;
@@ -70,7 +78,7 @@ public class FsmCanvas : Control
         Cursor = new Cursor(StandardCursorType.Arrow);
     }
 
-    // ─────────────────────────────── Public API ───────────────────────────────
+    // Public API 
 
     public void SetMode(EditorMode mode)
     {
@@ -141,7 +149,7 @@ public class FsmCanvas : Control
         InvalidateVisual();
     }
 
-    // ─────────────────────────────── Simulation ───────────────────────────────
+    // Simulation 
 
     public bool StartSimulation(string input)
     {
@@ -235,7 +243,7 @@ public class FsmCanvas : Control
         InvalidateVisual();
     }
 
-    // ─────────────────────────────── Pointer Events ───────────────────────────
+    // Pointer Events 
 
     protected override void OnPointerPressed(PointerPressedEventArgs e)
     {
@@ -400,7 +408,7 @@ public class FsmCanvas : Control
         return false;
     }
 
-    // ─────────────────────────────── Rendering ────────────────────────────────
+    // Rendering 
 
     public override void Render(DrawingContext ctx)
     {
@@ -622,7 +630,7 @@ public class FsmCanvas : Control
     }
 }
 
-// Tiny helper command for context menus
+// helper command for context menus
 public class RelayCommand(Action execute) : System.Windows.Input.ICommand
 {
     public event EventHandler? CanExecuteChanged { add { } remove { } } // Suppressed warning

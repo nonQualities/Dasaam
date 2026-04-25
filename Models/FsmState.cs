@@ -12,6 +12,6 @@ public class FsmState
     public bool IsAccepting { get; set; }
 
     // Visual-only flags (not part of FSM definition)
-    public bool IsActive { get; set; }        // currently highlighted in sim
+    public bool IsActive { get; set; }    
     public bool IsSelected { get; set; }
 }
