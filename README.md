@@ -3,7 +3,7 @@
 A beautiful, minimal finite state machine designer and simulator built with C# and Avalonia UI.
 The name *Daśam* (दशाम्) is Sanskrit for "the state" — the accusative form of *daśā*.
 
-## Requirements
+## Requirements (for building)
 
 - [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0)
 - Works on Windows, macOS, and Linux
