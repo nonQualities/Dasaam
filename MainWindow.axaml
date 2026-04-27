@@ -9,16 +9,33 @@
         TransparencyLevelHint="None"
         FontFamily="Inter,Segoe UI,sans-serif">
 
-  <Grid RowDefinitions="Auto,*,Auto">
+  <Grid RowDefinitions="Auto,Auto,*">
 
-    <!-- ══ TITLEBAR ═══════════════════════════════════════════════════════ -->
     <Border Grid.Row="0" Background="#0D1117"
             BorderBrush="#1C2541" BorderThickness="0,0,0,1"
             Padding="20,0">
-      <Grid ColumnDefinitions="*,Auto,*" Height="52">
+      <Grid ColumnDefinitions="*,Auto,*" Height="72">
 
         <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="6"
                     VerticalAlignment="Center">
+
+          <Button Classes="tool" ToolTip.Tip="Import Machine (.das)" Click="OnLoadFile">
+            <Canvas Width="22" Height="22">
+              <Path Data="M 5,14 L 5,18 L 17,18 L 17,14" Stroke="#94A3B8" StrokeThickness="1.5" Fill="Transparent"/>
+              <Path Data="M 11,3 L 11,14" Stroke="#94A3B8" StrokeThickness="1.5"/>
+              <Path Data="M 7,10 L 11,14 L 15,10" Stroke="#94A3B8" StrokeThickness="1.5"/>
+            </Canvas>
+          </Button>
+
+          <Button Classes="tool" ToolTip.Tip="Save Machine (.das)" Click="OnSaveFile">
+            <Canvas Width="22" Height="22">
+              <Path Data="M 4,4 L 14,4 L 18,8 L 18,18 L 4,18 Z" Stroke="#94A3B8" StrokeThickness="1.5" Fill="Transparent"/>
+              <Path Data="M 7,4 L 7,8 L 14,8 L 14,4" Stroke="#94A3B8" StrokeThickness="1.5" Fill="Transparent"/>
+              <Path Data="M 6,18 L 6,12 L 16,12 L 16,18" Stroke="#94A3B8" StrokeThickness="1.5" Fill="Transparent"/>
+            </Canvas>
+          </Button>
+
+          <Border Width="1" Background="#1C2541" Margin="4,16"/>
 
           <Button x:Name="BtnSelect" Classes="tool active"
                   ToolTip.Tip="Select / Move  (S)" Click="OnModeSelect">
@@ -55,7 +72,7 @@
             </Canvas>
           </Button>
 
-          <Border Width="1" Background="#1C2541" Margin="4,8"/>
+          <Border Width="1" Background="#1C2541" Margin="4,16"/>
 
           <Button x:Name="BtnSimulate" Classes="tool"
                   ToolTip.Tip="Simulate  (Space)" Click="OnModeSimulate">
@@ -64,10 +81,10 @@
             </Canvas>
           </Button>
 
-          <Border Width="1" Background="#1C2541" Margin="4,8"/>
+          <Border Width="1" Background="#1C2541" Margin="4,16"/>
 
           <Button Classes="tool" ToolTip.Tip="Clear canvas" Click="OnClear">
-            <Canvas Width="22" Height="22">
+             <Canvas Width="22" Height="22">
               <Rectangle Width="14" Height="12" Canvas.Left="4" Canvas.Top="6"
                          Stroke="#94A3B8" StrokeThickness="1.5" RadiusX="1" RadiusY="1"/>
               <Line StartPoint="2,6"  EndPoint="20,6" Stroke="#94A3B8" StrokeThickness="1.5"/>
@@ -93,55 +110,8 @@
       </Grid>
     </Border>
 
-    <!-- ══ CANVAS AREA ════════════════════════════════════════════════════ -->
-    <Grid Grid.Row="1">
-
-      <!-- FsmView avoids name clash with Avalonia.Controls.Canvas type -->
-      <local:FsmCanvas x:Name="FsmView"/>
-
-      <!-- State name input overlay -->
-      <Border x:Name="NameOverlay" IsVisible="False"
-              Background="#0D1117" BorderBrush="#60A5FA" BorderThickness="1"
-              CornerRadius="8" Padding="12" BoxShadow="0 8 32 0 #60A5FA22"
-              HorizontalAlignment="Left" VerticalAlignment="Top" ZIndex="10">
-        <StackPanel Spacing="8">
-          <TextBlock Text="State name" Foreground="#4A6FA5" FontSize="11"/>
-          <TextBox x:Name="NameBox" Classes="name-input" Watermark="e.g. q0"
-                   KeyDown="OnNameBoxKeyDown"/>
-          <TextBlock Text="Enter to confirm · Esc to cancel"
-                     Foreground="#3A5A9B" FontSize="10"/>
-        </StackPanel>
-      </Border>
-
-      <!-- Transition symbol overlay -->
-      <Border x:Name="SymbolOverlay" IsVisible="False"
-              Background="#0D1117" BorderBrush="#60A5FA" BorderThickness="1"
-              CornerRadius="8" Padding="12" BoxShadow="0 8 32 0 #60A5FA22"
-              HorizontalAlignment="Center" VerticalAlignment="Center" ZIndex="10">
-        <StackPanel Spacing="8">
-          <TextBlock Text="Transition symbol(s)" Foreground="#4A6FA5" FontSize="11"/>
-          <TextBox x:Name="SymbolBox" Classes="name-input" Watermark="e.g. 0,1"
-                   KeyDown="OnSymbolBoxKeyDown"/>
-          <TextBlock Text="Comma-separate multiple symbols · Enter to confirm"
-                     Foreground="#3A5A9B" FontSize="10"/>
-        </StackPanel>
-      </Border>
-
-      <!-- Empty canvas hint -->
-      <StackPanel x:Name="EmptyHint"
-                  HorizontalAlignment="Center" VerticalAlignment="Center"
-                  IsHitTestVisible="False" Spacing="8" Opacity="0.4">
-        <TextBlock Text="⊙" Foreground="#3A5A9B" FontSize="48" HorizontalAlignment="Center"/>
-        <TextBlock Text="Click ⊕ to add states, then connect them"
-                   Foreground="#4A6FA5" FontSize="14" HorizontalAlignment="Center"/>
-        <TextBlock Text="Right-click states to toggle initial / accepting"
-                   Foreground="#3A5A9B" FontSize="12" HorizontalAlignment="Center"/>
-      </StackPanel>
-    </Grid>
-
-    <!-- ══ SIMULATION RUNNING PANEL ═══════════════════════════════════════ -->
-    <Border x:Name="SimPanel" Grid.Row="2" IsVisible="False"
-            Background="#0D1117" BorderBrush="#1C2541" BorderThickness="0,1,0,0"
+    <Border x:Name="SimPanel" Grid.Row="1" IsVisible="False"
+            Background="#0D1117" BorderBrush="#1C2541" BorderThickness="0,0,0,1"
             Padding="16,10">
       <Grid ColumnDefinitions="Auto,*,Auto,Auto,Auto,Auto">
 
@@ -154,7 +124,6 @@
                 Padding="8,4" VerticalAlignment="Center">
           <ScrollViewer HorizontalScrollBarVisibility="Auto"
                         VerticalScrollBarVisibility="Disabled">
-            <!-- Children added programmatically in UpdateSimUI -->
             <StackPanel x:Name="InputTape" Orientation="Horizontal" Spacing="0"/>
           </ScrollViewer>
         </Border>
@@ -169,13 +138,13 @@
                 Content="◀ Back" Click="OnStepBack" Margin="0,0,6,0"/>
         <Button Grid.Column="4" x:Name="BtnStep" Classes="sim"
                 Content="Step ▶" Click="OnStepForward" Margin="0,0,6,0"/>
-        <Button Grid.Column="5" Classes="sim" Content="✕ Stop" Click="OnStopSim"/>
+        <Button Grid.Column="5" Classes="sim" 
+                Content="✕ Stop" Click="OnStopSim"/>
       </Grid>
     </Border>
 
-    <!-- ══ SIMULATION START PANEL ═════════════════════════════════════════ -->
-    <Border x:Name="SimStartPanel" Grid.Row="2" IsVisible="False"
-            Background="#0D1117" BorderBrush="#1C2541" BorderThickness="0,1,0,0"
+    <Border x:Name="SimStartPanel" Grid.Row="1" IsVisible="False"
+            Background="#0D1117" BorderBrush="#1C2541" BorderThickness="0,0,0,1"
             Padding="16,10">
       <Grid ColumnDefinitions="Auto,*,Auto,Auto">
         <TextBlock Grid.Column="0" Text="INPUT" Foreground="#4A6FA5"
@@ -189,6 +158,47 @@
         <Button Grid.Column="3" Classes="sim" Content="✕ Stop" Click="OnStopSim"/>
       </Grid>
     </Border>
+
+    <Grid Grid.Row="2">
+
+      <local:FsmCanvas x:Name="FsmView"/>
+
+      <Border x:Name="NameOverlay" IsVisible="False"
+              Background="#0D1117" BorderBrush="#60A5FA" BorderThickness="1"
+              CornerRadius="8" Padding="12" BoxShadow="0 8 32 0 #60A5FA22"
+              HorizontalAlignment="Left" VerticalAlignment="Top" ZIndex="10">
+        <StackPanel Spacing="8">
+          <TextBlock Text="State name" Foreground="#4A6FA5" FontSize="11"/>
+          <TextBox x:Name="NameBox" Classes="name-input" Watermark="e.g. q0"
+                   KeyDown="OnNameBoxKeyDown"/>
+          <TextBlock Text="Enter to confirm · Esc to cancel"
+                     Foreground="#3A5A9B" FontSize="10"/>
+        </StackPanel>
+      </Border>
+
+      <Border x:Name="SymbolOverlay" IsVisible="False"
+              Background="#0D1117" BorderBrush="#60A5FA" BorderThickness="1"
+              CornerRadius="8" Padding="12" BoxShadow="0 8 32 0 #60A5FA22"
+              HorizontalAlignment="Center" VerticalAlignment="Center" ZIndex="10">
+        <StackPanel Spacing="8">
+          <TextBlock Text="Transition symbol(s)" Foreground="#4A6FA5" FontSize="11"/>
+          <TextBox x:Name="SymbolBox" Classes="name-input" Watermark="e.g. 0,1"
+                   KeyDown="OnSymbolBoxKeyDown"/>
+          <TextBlock Text="Comma-separate multiple symbols · Enter to confirm"
+                     Foreground="#3A5A9B" FontSize="10"/>
+        </StackPanel>
+      </Border>
+
+      <StackPanel x:Name="EmptyHint"
+                  HorizontalAlignment="Center" VerticalAlignment="Center"
+                  IsHitTestVisible="False" Spacing="8" Opacity="0.4">
+        <TextBlock Text="⊙" Foreground="#3A5A9B" FontSize="48" HorizontalAlignment="Center"/>
+        <TextBlock Text="Click ⊕ to add states, then connect them"
+                   Foreground="#4A6FA5" FontSize="14" HorizontalAlignment="Center"/>
+        <TextBlock Text="Right-click states to toggle initial / accepting"
+                   Foreground="#3A5A9B" FontSize="12" HorizontalAlignment="Center"/>
+      </StackPanel>
+    </Grid>
 
   </Grid>
 </Window>

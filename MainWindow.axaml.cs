@@ -6,6 +6,8 @@ using Avalonia.Layout;
 using Avalonia.Media;
 using Dasam.Models;
 using System;
+using System.IO;
+using Avalonia.Platform.Storage;
 
 namespace Dasam;
 
@@ -52,6 +54,11 @@ public partial class MainWindow : Window
         KeyDown += (_, e) =>
         {
             // Only handle if no overlay is open
+            var focusManager = GetTopLevel(this)?.FocusManager;
+            if (focusManager?.GetFocusedElement() is TextBox) 
+                return;
+
+            if (NameOverlay.IsVisible || SymbolOverlay.IsVisible) return;
             if (NameOverlay.IsVisible || SymbolOverlay.IsVisible) return;
             switch (e.Key)
             {
@@ -129,6 +136,48 @@ public partial class MainWindow : Window
             EditorMode.Simulate => BtnSimulate,
             _ => BtnSelect
         });
+    }
+    
+    private async void OnSaveFile(object? sender, RoutedEventArgs e)
+    {
+        var topLevel = TopLevel.GetTopLevel(this);
+        if (topLevel == null) return;
+
+        var file = await topLevel.StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
+        {
+            Title = "Save Machine",
+            DefaultExtension = "das",
+            FileTypeChoices = new[] { new FilePickerFileType("Daśam Files") { Patterns = new[] { "*.das" } } }
+        });
+
+        if (file != null)
+        {
+            var json = FsmSerializer.Serialize(FsmView.States, FsmView.Transitions);
+            await using var stream = await file.OpenWriteAsync();
+            using var writer = new StreamWriter(stream);
+            await writer.WriteAsync(json);
+        }
+    }
+
+    private async void OnLoadFile(object? sender, RoutedEventArgs e)
+    {
+        var topLevel = TopLevel.GetTopLevel(this);
+        if (topLevel == null) return;
+
+        var files = await topLevel.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
+        {
+            Title = "Load Machine",
+            AllowMultiple = false,
+            FileTypeFilter = new[] { new FilePickerFileType("Daśam Files") { Patterns = new[] { "*.das" } } }
+        });
+
+        if (files.Count >= 1)
+        {
+            await using var stream = await files[0].OpenReadAsync();
+            using var reader = new StreamReader(stream);
+            var json = await reader.ReadToEndAsync();
+            FsmSerializer.Deserialize(json, FsmView);
+        }
     }
 
     private void SetActiveToolButton(Button active)
@@ -260,8 +309,7 @@ public partial class MainWindow : Window
                                                  : past   ? Color.Parse("#111827")
                                                           : Color.Parse("#13192B")),
                 BorderBrush = new SolidColorBrush(current ? Color.Parse("#60A5FA")
-                                                  : past   ? Color.Parse("#1C2541")
-                                                           : Color.Parse("#1C2541")),
+                                                  : Color.Parse("#1C2541")),
                 BorderThickness = new Thickness(1),
                 Child = new TextBlock
                 {

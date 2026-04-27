@@ -15,13 +15,13 @@ public enum SimStatus { Idle, Running, Accepted, Rejected }
 public class FsmCanvas : Control
 {
     // ── Constants ────────────────────────────────────────────────────────────
-    public const double R = 34;          // state radius
+    private const double R = 70;          // state radius
     private const double Arrow = 11;     // arrowhead size
     private const double ArrowAngle = Math.PI / 6;
 
     // ── Palette ──────────────────────────────────────────────────────────────
     private static readonly Color CBg       = Color.Parse("#0D1117");
-    private static readonly Color CGrid     = Color.Parse("#161B2E");
+    private static readonly Color CGrid     = Color.Parse("#2f3a63");
     private static readonly Color CState    = Color.Parse("#1C2541");
     private static readonly Color CStroke   = Color.Parse("#3A5A9B");
     private static readonly Color CActive   = Color.Parse("#1A3A6A");
@@ -40,16 +40,10 @@ public class FsmCanvas : Control
     private static readonly Typeface TfState = new(FontFamily.Parse("Inter,sans-serif"), FontStyle.Normal, FontWeight.SemiBold);
     private static readonly Typeface TfLabel = new(FontFamily.Parse("Inter,sans-serif"));
 
-    
-    
-    // ── Data 
+    // Data 
     public List<FsmState> States { get; } = [];
-    public new List<FsmTransition> Transitions { get; } = [];
+    public List<FsmTransition> Transitions { get; } = []; // Made public for serialization
     
-    
-    
-    
-
     // ── Editor state 
     private EditorMode _mode = EditorMode.Select;
     private FsmState? _dragState;
@@ -57,8 +51,6 @@ public class FsmCanvas : Control
     private FsmState? _connectFrom;
     private Point _mousePos;
 
-    
-    
     // ── Simulation state 
     public SimStatus SimulationStatus { get; private set; } = SimStatus.Idle;
     public string SimInput { get; private set; } = "";
@@ -361,7 +353,7 @@ public class FsmCanvas : Control
         menu.Open(this);
     }
 
-    // ─────────────────────────────── Hit Testing ──────────────────────────────
+    // Hit Testing 
 
     private FsmState? HitTestState(Point p)
     {
@@ -416,6 +408,18 @@ public class FsmCanvas : Control
 
         // Background
         ctx.FillRectangle(new SolidColorBrush(CBg), bounds);
+
+        // State-Driven Glow Layer
+        if (SimulationStatus == SimStatus.Accepted)
+        {
+            // Green glow, approx 12% opacity over #0D1117 background
+            ctx.FillRectangle(new SolidColorBrush(Color.FromArgb(30, 52, 211, 153)), bounds);
+        }
+        else if (SimulationStatus == SimStatus.Rejected)
+        {
+            // Red glow, approx 12% opacity over #0D1117 background
+            ctx.FillRectangle(new SolidColorBrush(Color.FromArgb(30, 248, 113, 113)), bounds);
+        }
 
         // Subtle dot grid
         DrawGrid(ctx, bounds);
